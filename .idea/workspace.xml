@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="496c8c88-b341-4d21-aad1-9a20f7ecf63f" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/front-end/isabela-modas-frontend/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/isabela-modas-frontend/angular.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/isabela-modas-frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/isabela-modas-frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/isabela-modas-frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/isabela-modas-frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/isabela-modas-frontend/src/app/app.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/isabela-modas-frontend/src/app/app.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/isabela-modas-frontend/src/app/app.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/isabela-modas-frontend/src/app/app.component.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/isabela-modas-frontend/src/app/app.routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/isabela-modas-frontend/src/app/app.routes.ts" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/front-end/isabela-modas-frontend" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 3
+}]]></component>
+  <component name="ProjectId" id="38FWpF7lAAEjDT07VjhB20aliCW" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Projetos_Spring/isabelaModas/back-end",
+    "settings.editor.selected.configurable": "advanced.settings"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="496c8c88-b341-4d21-aad1-9a20f7ecf63f" name="Changes" comment="" />
+      <created>1734527143287</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1734527143287</updated>
+    </task>
+    <servers />
+  </component>
+</project>
