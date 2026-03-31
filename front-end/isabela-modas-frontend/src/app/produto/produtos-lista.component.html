@@ -1,0 +1,145 @@
+<div class="page-container">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <button mat-icon-button routerLink="/dashboard" matTooltip="Voltar ao Dashboard" class="back-button">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div>
+        <h1>Gerenciar Produtos</h1>
+        <p>Consulte, adicione e edite produtos do catálogo</p>
+      </div>
+    </div>
+    <button mat-raised-button class="btn-primary" routerLink="/produtos/novo">
+      <mat-icon>add</mat-icon>
+      Novo Produto
+    </button>
+  </div>
+
+  <!-- Barra de Filtros e Busca -->
+  <div class="content-card filters-section">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Buscar produto</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput [(ngModel)]="termo" (keyup)="buscar()" placeholder="Nome, cor, tamanho..." />
+      <button mat-icon-button matSuffix *ngIf="termo" (click)="limparBusca()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <div class="filter-chips">
+      <mat-chip-set>
+        <mat-chip [highlighted]="filtroEstoque === 'todos'" (click)="filtrarPorEstoque('todos')">
+          Todos
+        </mat-chip>
+        <mat-chip [highlighted]="filtroEstoque === 'baixo'" (click)="filtrarPorEstoque('baixo')">
+          <mat-icon>warning</mat-icon>
+          Estoque Baixo
+        </mat-chip>
+        <mat-chip [highlighted]="filtroEstoque === 'zerado'" (click)="filtrarPorEstoque('zerado')">
+          <mat-icon>remove_circle</mat-icon>
+          Sem Estoque
+        </mat-chip>
+      </mat-chip-set>
+    </div>
+  </div>
+
+  <!-- Tabela de Produtos -->
+  <div class="content-card table-container">
+    <table mat-table [dataSource]="dataSource" class="elegant-table">
+      
+      <!-- Imagem/Ícone -->
+      <ng-container matColumnDef="icone">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let p">
+          <div class="product-icon">
+            <mat-icon>inventory_2</mat-icon>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Nome -->
+      <ng-container matColumnDef="nome">
+        <th mat-header-cell *matHeaderCellDef>Produto</th>
+        <td mat-cell *matCellDef="let p">
+          <div class="product-info">
+            <strong>{{ p.nome }}</strong>
+            <span class="product-detail">Cód: {{ p.id }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Variações (Cor + Tamanho) -->
+      <ng-container matColumnDef="variacoes">
+        <th mat-header-cell *matHeaderCellDef>Variações</th>
+        <td mat-cell *matCellDef="let p">
+          <div class="variations">
+            <span class="chip color-chip">{{ p.cor }}</span>
+            <span class="chip size-chip">{{ p.tamanho }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Preço -->
+      <ng-container matColumnDef="preco">
+        <th mat-header-cell *matHeaderCellDef>Preço</th>
+        <td mat-cell *matCellDef="let p">
+          <span class="price">{{ p.preco | currency:'BRL':'symbol':'1.2-2' }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Estoque -->
+      <ng-container matColumnDef="estoqueAtual">
+        <th mat-header-cell *matHeaderCellDef>Estoque</th>
+        <td mat-cell *matCellDef="let p">
+          <span class="stock-badge" [class.low]="p.estoqueAtual <= 5" [class.zero]="p.estoqueAtual === 0">
+            {{ p.estoqueAtual }} un.
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Ações -->
+      <ng-container matColumnDef="acoes">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td mat-cell *matCellDef="let p">
+          <div class="action-buttons">
+            <button mat-icon-button [routerLink]="['/produtos', p.id, 'editar']" matTooltip="Editar">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deletar(p.id)" matTooltip="Excluir">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row"></tr>
+    </table>
+
+    <!-- Estado Vazio -->
+    <div class="empty-state" *ngIf="dataSource.data.length === 0">
+      <mat-icon>inventory</mat-icon>
+      <h3>Nenhum produto encontrado</h3>
+      <p>{{ termo ? 'Tente ajustar os filtros de busca' : 'Comece adicionando seu primeiro produto' }}</p>
+      <button mat-raised-button class="btn-primary" routerLink="/produtos/novo">
+        <mat-icon>add</mat-icon>
+        Adicionar Produto
+      </button>
+    </div>
+  </div>
+
+  <!-- Paginação -->
+  <div class="pagination-container" *ngIf="totalPages > 0 && dataSource.data.length > 0">
+    <button mat-icon-button (click)="paginaAnterior()" [disabled]="page === 0">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <div class="pagination-info">
+      <span>Página <strong>{{ page + 1 }}</strong> de <strong>{{ totalPages }}</strong></span>
+    </div>
+    <button mat-icon-button (click)="proximaPagina()" [disabled]="page >= totalPages - 1">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+</div>
+

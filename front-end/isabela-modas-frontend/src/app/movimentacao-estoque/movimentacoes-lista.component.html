@@ -1,0 +1,208 @@
+<div class="page-container">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <button mat-icon-button routerLink="/dashboard" matTooltip="Voltar ao Dashboard" class="back-button">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div>
+        <h1>Movimentações de Estoque</h1>
+        <p>Controle de saídas temporárias, devoluções e vendas</p>
+      </div>
+    </div>
+    <button mat-raised-button class="btn-primary" routerLink="/movimentacoes-estoque/nova">
+      <mat-icon>swap_horiz</mat-icon>
+      Nova Movimentação
+    </button>
+  </div>
+
+  <!-- Filtros -->
+  <div class="content-card filters-section">
+    <div class="filters-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>Buscar Produto</mat-label>
+        <mat-icon matPrefix>inventory_2</mat-icon>
+        <input 
+          matInput 
+          [formControl]="produtoControl"
+          [matAutocomplete]="autoProduto"
+          placeholder="Digite para buscar..." />
+        <mat-autocomplete 
+          #autoProduto="matAutocomplete" 
+          [displayWith]="exibirProduto"
+          (optionSelected)="selecionarProduto($event.option.value)">
+          <mat-option *ngFor="let produto of produtosFiltrados | async" [value]="produto">
+            <div class="autocomplete-option">
+              <strong>{{ produto.nome }}</strong>
+              <span class="text-muted" *ngIf="produto.cor || produto.tamanho">
+                {{ produto.cor }} - {{ produto.tamanho }}
+              </span>
+            </div>
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>CPF do Cliente</mat-label>
+        <mat-icon matPrefix>person</mat-icon>
+        <input matInput [(ngModel)]="filtros.clienteCpf" placeholder="000.000.000-00" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Tipo de Movimentação</mat-label>
+        <mat-select [(ngModel)]="filtros.tipo">
+          <mat-option value="">Todos</mat-option>
+          <mat-option *ngFor="let tipo of tiposMovimentacao" [value]="tipo.value">
+            {{ tipo.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Status</mat-label>
+        <mat-select [(ngModel)]="filtros.status">
+          <mat-option value="">Todos</mat-option>
+          <mat-option *ngFor="let st of statusMovimentacao" [value]="st.value">
+            {{ st.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="filter-actions">
+      <button mat-raised-button color="primary" (click)="aplicarFiltros()">
+        <mat-icon>search</mat-icon>
+        Buscar
+      </button>
+      <button mat-button (click)="limparFiltros()">
+        <mat-icon>clear</mat-icon>
+        Limpar
+      </button>
+    </div>
+  </div>
+
+  <!-- Tabela -->
+  <div class="content-card table-container">
+    <table mat-table [dataSource]="dataSource" class="elegant-table" *ngIf="tabelaVisivel">
+      
+      <!-- Data -->
+      <ng-container matColumnDef="dataMovimentacao">
+        <th mat-header-cell *matHeaderCellDef>Data</th>
+        <td mat-cell *matCellDef="let m">
+          <div class="cell-info">
+            <mat-icon class="cell-icon">event</mat-icon>
+            <span>{{ m.dataMovimentacao | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Tipo -->
+      <ng-container matColumnDef="tipo">
+        <th mat-header-cell *matHeaderCellDef>Tipo</th>
+        <td mat-cell *matCellDef="let m">
+          <mat-chip class="chip-tipo">
+            {{ getTipoLabel(m.tipoMovimentacao) }}
+          </mat-chip>
+        </td>
+      </ng-container>
+
+      <!-- Status -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let m">
+          <mat-chip [color]="getStatusColor(m.status)" selected>
+            {{ m.status || 'ATIVA' }}
+          </mat-chip>
+        </td>
+      </ng-container>
+
+      <!-- Produto -->
+      <ng-container matColumnDef="produto">
+        <th mat-header-cell *matHeaderCellDef>Produto</th>
+        <td mat-cell *matCellDef="let m">
+          <div class="cell-info">
+            <mat-icon class="cell-icon">inventory_2</mat-icon>
+            <div>
+              <strong>{{ m.produtoNome || m.produto?.nome || 'Sem produto' }}</strong>
+              <span class="text-muted" *ngIf="m.produto?.cor || m.produto?.tamanho">
+                {{ m.produto?.cor }} - {{ m.produto?.tamanho }}
+              </span>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Cliente -->
+      <ng-container matColumnDef="cliente">
+        <th mat-header-cell *matHeaderCellDef>Cliente</th>
+        <td mat-cell *matCellDef="let m">
+          <div class="cell-info" *ngIf="m.cliente || m.clienteId">
+            <mat-icon class="cell-icon">person</mat-icon>
+            <div>
+              <strong>{{ m.cliente?.nome || 'Cliente ID: ' + m.clienteId }}</strong>
+              <span class="text-muted" *ngIf="m.cliente?.cpf">{{ m.cliente?.cpf }}</span>
+            </div>
+          </div>
+          <span class="text-muted" *ngIf="!m.cliente && !m.clienteId">-</span>
+        </td>
+      </ng-container>
+
+      <!-- Quantidade -->
+      <ng-container matColumnDef="quantidade">
+        <th mat-header-cell *matHeaderCellDef>Qtd</th>
+        <td mat-cell *matCellDef="let m">
+          <strong class="quantidade-badge">{{ m.quantidade }}</strong>
+        </td>
+      </ng-container>
+
+      <!-- Ações -->
+      <ng-container matColumnDef="acoes">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td mat-cell *matCellDef="let m">
+          <div class="action-buttons">
+            <!-- Botão Devolver (só aparece em SAIDA_TEMPORARIA) -->
+            <button 
+              mat-mini-fab 
+              color="primary" 
+              *ngIf="podeDevolver(m)"
+              (click)="devolverAoEstoque(m)" 
+              matTooltip="Devolver ao Estoque"
+              class="action-btn btn-devolver">
+              <mat-icon>keyboard_return</mat-icon>
+            </button>
+
+            <!-- Botão Converter para Venda (só aparece em SAIDA_TEMPORARIA) -->
+            <button 
+              mat-mini-fab 
+              color="accent" 
+              *ngIf="podeConverterParaVenda(m)"
+              (click)="converterParaVenda(m)" 
+              matTooltip="Registrar Venda"
+              class="action-btn btn-vender">
+              <mat-icon>point_of_sale</mat-icon>
+            </button>
+
+            <!-- Indicador de status finalizado -->
+            <span class="status-finalizado" *ngIf="!podeDevolver(m) && !podeConverterParaVenda(m)">
+              <mat-icon [matTooltip]="getStatusTooltip(m)">{{ getStatusIcon(m) }}</mat-icon>
+            </span>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <!-- Estado Vazio -->
+    <div class="empty-state" *ngIf="tabelaVisivel && dataSource.data.length === 0">
+      <mat-icon>swap_horiz</mat-icon>
+      <h3>Nenhuma movimentação encontrada</h3>
+      <p>{{ filtros.produtoNome || filtros.clienteCpf || filtros.tipo ? 'Tente ajustar os filtros' : 'Registre a primeira movimentação de estoque' }}</p>
+      <button mat-raised-button color="primary" routerLink="/movimentacoes-estoque/nova" *ngIf="!filtros.produtoNome && !filtros.clienteCpf && !filtros.tipo">
+        <mat-icon>add</mat-icon>
+        Nova Movimentação
+      </button>
+    </div>
+  </div>
+</div>

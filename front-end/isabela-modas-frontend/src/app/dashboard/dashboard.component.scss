@@ -1,0 +1,171 @@
+.dashboard {
+  .dashboard-metrics {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    margin-bottom: 32px;
+  }
+
+  .metric-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .metric-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      mat-icon {
+        font-size: 32px;
+        width: 32px;
+        height: 32px;
+        color: white;
+      }
+
+      &.vendas {
+        background: linear-gradient(135deg, #7CB342 0%, #558B2F 100%);
+      }
+
+      &.faturamento {
+        background: linear-gradient(135deg, #FFB74D 0%, #F57C00 100%);
+      }
+
+      &.receber {
+        background: linear-gradient(135deg, #64B5F6 0%, #1976D2 100%);
+      }
+
+      &.estoque {
+        background: linear-gradient(135deg, #8B7355 0%, #6B5940 100%);
+      }
+    }
+
+    .metric-content {
+      flex: 1;
+
+      h3 {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #757575;
+        margin: 0 0 4px 0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .metric-value {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #2C2C2C;
+        margin: 4px 0;
+        line-height: 1;
+      }
+
+      .metric-label {
+        font-size: 0.85rem;
+        color: #999;
+      }
+    }
+  }
+
+  .quick-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+
+    button {
+      flex: 1;
+      min-width: 200px;
+      height: 56px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 10px;
+      
+      mat-icon {
+        margin-right: 8px;
+      }
+    }
+  }
+
+  .alerts-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 20px;
+    margin-bottom: 24px;
+
+    .alert-card {
+      border-left: 4px solid #FFB74D;
+
+      .warning-icon {
+        color: #FFB74D;
+      }
+
+      .notification-icon {
+        color: #64B5F6;
+      }
+    }
+
+    .alert-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      .alert-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        background-color: #FFF8F0;
+        border-radius: 8px;
+        border-left: 3px solid #FFB74D;
+
+        mat-icon {
+          color: #FFB74D;
+        }
+
+        span {
+          flex: 1;
+          font-size: 0.95rem;
+        }
+
+        button {
+          flex-shrink: 0;
+        }
+      }
+    }
+  }
+
+  .dashboard-charts {
+    .chart-container {
+      width: 100%;
+      height: 400px;
+      padding: 16px 0;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    .dashboard-metrics {
+      grid-template-columns: 1fr;
+    }
+
+    .quick-actions button {
+      min-width: 100%;
+    }
+
+    .alerts-section {
+      grid-template-columns: 1fr;
+    }
+  }
+}

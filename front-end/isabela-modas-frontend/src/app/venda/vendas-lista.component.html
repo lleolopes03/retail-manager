@@ -1,0 +1,164 @@
+<div class="page-container">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <button mat-icon-button routerLink="/dashboard" matTooltip="Voltar ao Dashboard" class="back-button">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div>
+        <h1>Gerenciar Vendas</h1>
+        <p>Consulte o histórico completo de vendas realizadas</p>
+      </div>
+    </div>
+    <button mat-raised-button class="btn-primary" routerLink="/vendas/novo">
+      <mat-icon>add_shopping_cart</mat-icon>
+      Nova Venda
+    </button>
+  </div>
+
+  <!-- Filtros -->
+  <div class="content-card filters-section">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Buscar venda</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput [(ngModel)]="filtros.nomeCliente" (keyup)="buscarPorNome()" placeholder="Nome do cliente..." />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Status</mat-label>
+      <mat-select [(ngModel)]="filtros.status" (selectionChange)="aplicarFiltros()">
+        <mat-option value="">Todos</mat-option>
+        <mat-option value="PAGO">Pago</mat-option>
+        <mat-option value="PENDENTE">Pendente</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Forma de Pagamento</mat-label>
+      <mat-select [(ngModel)]="filtros.tipoPagamento" (selectionChange)="aplicarFiltros()">
+        <mat-option value="">Todas</mat-option>
+        <mat-option value="DINHEIRO">Dinheiro</mat-option>
+        <mat-option value="PIX">PIX</mat-option>
+        <mat-option value="CREDITO">Crédito</mat-option>
+        <mat-option value="DEBITO">Débito</mat-option>
+        <mat-option value="CARNE">Carnê</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" (click)="aplicarFiltros()" class="btn-search">
+      <mat-icon>search</mat-icon>
+      Buscar
+    </button>
+
+    <button mat-raised-button (click)="limparFiltros()">
+      <mat-icon>clear</mat-icon>
+      Limpar
+    </button>
+  </div>
+
+  <!-- Tabela -->
+  <div class="content-card table-container">
+    <table mat-table [dataSource]="dataSource" class="elegant-table">
+      
+      <!-- ID -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let v">#{{ v.id }}</td>
+      </ng-container>
+
+      <!-- Cliente -->
+      <ng-container matColumnDef="cliente">
+        <th mat-header-cell *matHeaderCellDef>Cliente</th>
+        <td mat-cell *matCellDef="let v">
+          <div class="client-info">
+            <mat-icon>person</mat-icon>
+            <span>{{ v.cliente?.nome || 'N/A' }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Data -->
+      <ng-container matColumnDef="dataVenda">
+        <th mat-header-cell *matHeaderCellDef>Data</th>
+        <td mat-cell *matCellDef="let v">{{ v.dataVenda | date:'dd/MM/yyyy' }}</td>
+      </ng-container>
+
+      <!-- Valor Total -->
+      <ng-container matColumnDef="valorTotal">
+        <th mat-header-cell *matHeaderCellDef>Valor Total</th>
+        <td mat-cell *matCellDef="let v">
+          <span class="value-highlight">{{ v.valorTotal | currency:'BRL':'symbol':'1.2-2' }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Forma de Pagamento -->
+      <ng-container matColumnDef="tipoPagamento">
+        <th mat-header-cell *matHeaderCellDef>Pagamento</th>
+        <td mat-cell *matCellDef="let v">
+          <span class="payment-chip" [class]="'payment-' + (v.tipoPagamento || 'default').toLowerCase()">
+            {{ v.tipoPagamento || 'N/A' }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Status -->
+      <ng-container matColumnDef="statusPagamento">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let v">
+          <span class="status-badge" [class.paid]="v.statusPagamento === 'PAGO'" [class.pending]="v.statusPagamento === 'PENDENTE'">
+            {{ v.statusPagamento || 'N/A' }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Ações -->
+      <ng-container matColumnDef="acoes">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td mat-cell *matCellDef="let v">
+          <div class="action-buttons">
+            <button mat-icon-button [routerLink]="['/vendas', v.id, 'editar']" matTooltip="Editar">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="primary" [routerLink]="['/vendas', v.id, 'parcelas']" matTooltip="Ver Parcelas" *ngIf="v.tipoPagamento === 'CARNE'">
+              <mat-icon>receipt</mat-icon>
+            </button>
+            <button mat-icon-button color="accent" [routerLink]="['/comprovante', v.id]" matTooltip="Comprovante">
+              <mat-icon>print</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="excluir(v.id)" matTooltip="Excluir">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row"></tr>
+    </table>
+
+    <!-- Estado Vazio -->
+    <div class="empty-state" *ngIf="dataSource.data.length === 0">
+      <mat-icon>shopping_cart</mat-icon>
+      <h3>Nenhuma venda encontrada</h3>
+      <p>{{ filtros.nomeCliente || filtros.status ? 'Tente ajustar os filtros' : 'Registre sua primeira venda' }}</p>
+      <button mat-raised-button class="btn-primary" routerLink="/vendas/novo">
+        <mat-icon>add</mat-icon>
+        Nova Venda
+      </button>
+    </div>
+  </div>
+
+  <!-- Paginação -->
+  <div class="pagination-container" *ngIf="totalPages > 0 && dataSource.data.length > 0">
+    <button mat-icon-button (click)="paginaAnterior()" [disabled]="page === 0">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <div class="pagination-info">
+      <span>Página <strong>{{ page + 1 }}</strong> de <strong>{{ totalPages }}</strong></span>
+    </div>
+    <button mat-icon-button (click)="proximaPagina()" [disabled]="page >= totalPages - 1">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+</div>
+

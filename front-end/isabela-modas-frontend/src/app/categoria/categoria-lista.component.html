@@ -1,0 +1,73 @@
+<div class="page-container">
+  <div class="page-header">
+    <div class="header-left">
+      <button mat-icon-button routerLink="/dashboard" matTooltip="Voltar ao Dashboard" class="back-button">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div>
+        <h1>Gerenciar Categorias</h1>
+        <p>Organize seus produtos por categorias</p>
+      </div>
+    </div>
+    <button mat-raised-button class="btn-primary" routerLink="/categorias/novo">
+      <mat-icon>add</mat-icon>
+      Nova Categoria
+    </button>
+  </div>
+
+  <div class="content-card filters-section">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Buscar categoria</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput [(ngModel)]="termo" (keyup)="buscar()" placeholder="Nome da categoria..." />
+    </mat-form-field>
+  </div>
+
+  <div class="content-card table-container">
+    <table mat-table [dataSource]="dataSource" class="elegant-table">
+      <ng-container matColumnDef="icone">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let cat">
+          <div class="category-icon">
+            <mat-icon>category</mat-icon>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="nome">
+        <th mat-header-cell *matHeaderCellDef>Categoria</th>
+        <td mat-cell *matCellDef="let cat">
+          <strong>{{ cat.nome }}</strong>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="acoes">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td mat-cell *matCellDef="let cat">
+          <div class="action-buttons">
+            <button mat-icon-button [routerLink]="['/categorias', cat.id, 'editar']" matTooltip="Editar">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deletar(cat.id)" matTooltip="Excluir">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row"></tr>
+    </table>
+
+    <div class="empty-state" *ngIf="dataSource.data.length === 0">
+      <mat-icon>category</mat-icon>
+      <h3>Nenhuma categoria encontrada</h3>
+      <p>{{ termo ? 'Tente ajustar a busca' : 'Crie sua primeira categoria' }}</p>
+      <button mat-raised-button class="btn-primary" routerLink="/categorias/novo">
+        <mat-icon>add</mat-icon>
+        Nova Categoria
+      </button>
+    </div>
+  </div>
+</div>
+

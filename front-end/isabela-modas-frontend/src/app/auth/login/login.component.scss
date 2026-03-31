@@ -1,0 +1,130 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background: linear-gradient(135deg, #F5E6D3 0%, #E0D1BF 50%, #D4A574 100%);
+}
+
+.login-card-wrapper {
+  max-width: 440px;
+  width: 100%;
+  animation: slideUp 0.6s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.login-card {
+  padding: 40px 32px;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(139, 115, 85, 0.2);
+  background: white;
+  border: 1px solid rgba(139, 115, 85, 0.1);
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 32px;
+}
+
+.logo {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid #8B7355;
+  box-shadow: 0 6px 20px rgba(139, 115, 85, 0.25);
+  transition: transform 0.3s ease;
+  display: block;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+}
+
+.login-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #8B7355;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.5px;
+  text-align: center;
+}
+
+.login-subtitle {
+  font-size: 0.95rem;
+  color: #757575;
+  font-weight: 400;
+  text-align: center;
+  margin: 0 0 32px 0;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.login-button {
+  width: 100%;
+  height: 48px;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-top: 8px;
+  background-color: #8B7355;
+  color: white;
+}
+
+.login-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.login-button:hover:not(:disabled) {
+  background-color: #6B5940;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.login-footer {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #E0E0E0;
+  text-align: center;
+}
+
+.login-footer p {
+  font-size: 0.85rem;
+  color: #999;
+  margin: 0;
+}
+
+@media (max-width: 500px) {
+  .login-container {
+    padding: 12px;
+  }
+  
+  .login-card {
+    padding: 28px 20px;
+  }
+  
+  .logo {
+    width: 110px;
+    height: 110px;
+  }
+  
+  .login-title {
+    font-size: 1.5rem;
+  }
+}

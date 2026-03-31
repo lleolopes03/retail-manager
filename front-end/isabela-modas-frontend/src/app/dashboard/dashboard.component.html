@@ -1,0 +1,125 @@
+<div class="page-container dashboard">
+  <!-- Header da Página -->
+  <div class="page-header">
+    <h1>Dashboard</h1>
+    <p>Visão geral do seu negócio</p>
+  </div>
+
+  <!-- Cards de Métricas Principais -->
+  <div class="cards-grid dashboard-metrics">
+    <!-- Vendas do Dia -->
+    <mat-card class="metric-card">
+      <div class="metric-icon vendas">
+        <mat-icon>attach_money</mat-icon>
+      </div>
+      <div class="metric-content">
+        <h3>Vendas Hoje</h3>
+        <p class="metric-value">{{ totalVendasHoje | currency:'BRL':'symbol':'1.2-2' }}</p>
+        <span class="metric-label">{{ qtdVendasHoje }} vendas realizadas</span>
+      </div>
+    </mat-card>
+
+    <!-- Vendas do Mês -->
+    <mat-card class="metric-card">
+      <div class="metric-icon faturamento">
+        <mat-icon>trending_up</mat-icon>
+      </div>
+      <div class="metric-content">
+        <h3>Faturamento Mensal</h3>
+        <p class="metric-value">{{ totalVendasMes | currency:'BRL':'symbol':'1.2-2' }}</p>
+        <span class="metric-label">Mês atual</span>
+      </div>
+    </mat-card>
+
+    <!-- Valores a Receber -->
+    <mat-card class="metric-card">
+      <div class="metric-icon receber">
+        <mat-icon>account_balance_wallet</mat-icon>
+      </div>
+      <div class="metric-content">
+        <h3>A Receber</h3>
+        <p class="metric-value">{{ totalValoresAReceber | currency:'BRL':'symbol':'1.2-2' }}</p>
+        <span class="metric-label">Pendente</span>
+      </div>
+    </mat-card>
+
+    <!-- Produtos em Estoque -->
+    <mat-card class="metric-card">
+      <div class="metric-icon estoque">
+        <mat-icon>inventory_2</mat-icon>
+      </div>
+      <div class="metric-content">
+        <h3>Estoque</h3>
+        <p class="metric-value">{{ produtosEmEstoque }}</p>
+        <span class="metric-label">produtos disponíveis</span>
+      </div>
+    </mat-card>
+  </div>
+
+  <!-- Seção de Ações Rápidas -->
+  <div class="content-card">
+    <h2 class="content-card-title">
+      <mat-icon>bolt</mat-icon>
+      Ações Rápidas
+    </h2>
+    <div class="quick-actions">
+      <button mat-raised-button class="btn-primary" routerLink="/vendas/novo">
+        <mat-icon>add_shopping_cart</mat-icon>
+        Nova Venda
+      </button>
+      <button mat-raised-button class="btn-secondary" routerLink="/produtos/novo">
+        <mat-icon>add_box</mat-icon>
+        Novo Produto
+      </button>
+      <button mat-raised-button class="btn-secondary" routerLink="/clientes/novo">
+        <mat-icon>person_add</mat-icon>
+        Novo Cliente
+      </button>
+      <button mat-raised-button class="btn-secondary" routerLink="/relatorios">
+        <mat-icon>assessment</mat-icon>
+        Relatórios
+      </button>
+    </div>
+  </div>
+
+  <!-- Seção de Alertas -->
+  <div class="alerts-section" *ngIf="produtosBaixoEstoque.length > 0 || lembretesAtivos > 0">
+    <div class="content-card alert-card" *ngIf="produtosBaixoEstoque.length > 0">
+      <h2 class="content-card-title">
+        <mat-icon class="warning-icon">warning</mat-icon>
+        Produtos com Estoque Baixo
+      </h2>
+      <div class="alert-list">
+        <div class="alert-item" *ngFor="let produto of produtosBaixoEstoque">
+          <mat-icon>inventory</mat-icon>
+          <span><strong>{{ produto.nome }}</strong> - {{ produto.estoqueAtual }} unidades</span>
+          <button mat-button color="primary" [routerLink]="['/produtos', produto.id, 'editar']">
+            Repor
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-card alert-card" *ngIf="lembretesAtivos > 0">
+      <h2 class="content-card-title">
+        <mat-icon class="notification-icon">notifications_active</mat-icon>
+        Lembretes Ativos
+      </h2>
+      <p>Você tem <strong>{{ lembretesAtivos }}</strong> lembrete(s) pendente(s).</p>
+      <button mat-raised-button class="btn-primary" routerLink="/lembretes">
+        Ver Lembretes
+      </button>
+    </div>
+  </div>
+
+  <!-- Gráficos e Tabelas (futuro) -->
+  <!-- <div class="dashboard-charts">
+    <div class="content-card">
+      <h2 class="content-card-title">
+        <mat-icon>show_chart</mat-icon>
+        Vendas dos Últimos 7 Dias
+      </h2>
+      <div class="chart-container">Gráfico em desenvolvimento</div>
+    </div>
+  </div> -->
+</div>

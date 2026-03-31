@@ -1,0 +1,160 @@
+<div
+  id="comprovante"
+  class="comprovante-container"
+  *ngIf="empresa$ | async as empresa"
+>
+  <mat-card *ngIf="venda">
+    <h2>Comprovante de Venda</h2>
+
+    <!-- Cabeçalho da empresa -->
+    <div class="empresa-info">
+      <p><strong>{{ empresa.nome }}</strong></p>
+      <p>CNPJ: {{ empresa.cnpj }}</p>
+      <p>
+        Endereço: {{ empresa.endereco.logradouro }}, {{ empresa.numero }} -
+        {{ empresa.endereco.bairro }},
+        {{ empresa.endereco.localidade }}/{{ empresa.endereco.uf }} -
+        CEP: {{ empresa.endereco.cep }}
+      </p>
+      <p>Telefone: {{ empresa.telefone }} | Email: {{ empresa.email }}</p>
+    </div>
+
+    <!-- Dados do cliente -->
+    <div class="cliente-info">
+      <p><strong>Cliente:</strong> {{ venda.cliente.nome }}</p>
+      <p>CPF: {{ venda.cliente.cpf }}</p>
+      <p>
+        Telefone: {{ venda.cliente.telefone }} |
+        Email: {{ venda.cliente.email }}
+      </p>
+    </div>
+
+    <!-- Dados da venda -->
+    <div class="venda-info">
+      <p>Comprovante Nº: {{ venda.id }}</p>
+      <p>Data: {{ venda.dataVenda | date: 'dd/MM/yyyy' }}</p>
+      <p>Forma de Pagamento: {{ venda.formaPagamento?.tipo || venda.tipoPagamento }}</p>
+
+      <!-- Parcelamento no crédito -->
+      <p *ngIf="(venda.formaPagamento?.tipo === 'CREDITO' || venda.tipoPagamento === 'CREDITO') && (venda.formaPagamento?.numeroParcelas > 1 || venda.numeroParcelas > 1)">
+        Parcelado em {{ venda.formaPagamento?.numeroParcelas || venda.numeroParcelas }}x no cartão de crédito
+      </p>
+
+      <!-- Parcelamento no carnê -->
+      <div *ngIf="(venda.formaPagamento?.tipo === 'CARNE' || venda.tipoPagamento === 'CARNE') && parcelas.length > 0">
+        <p>
+          Parcelado em {{ parcelas.length }}x no carnê
+          (primeira parcela em {{ parcelas[0].dataVencimento | date:'dd/MM/yyyy' }})
+        </p>
+
+        <h3>Parcelas do Carnê</h3>
+        <table class="parcelas">
+          <tr>
+            <th>Nº</th>
+            <th>Valor</th>
+            <th>Vencimento</th>
+            <th>Status</th>
+            <th>Ação</th>
+          </tr>
+          <tr *ngFor="let parcela of parcelas">
+            <td>{{ parcela.numero }}</td>
+            <td>{{ parcela.valor | currency:'BRL' }}</td>
+            <td>{{ parcela.dataVencimento | date:'dd/MM/yyyy' }}</td>
+            <td>{{ parcela.status }}</td>
+            <td>
+              <button 
+                *ngIf="!parcela.linkPagamento && parcela.status !== 'PAGO'" 
+                mat-raised-button 
+                color="primary" 
+                (click)="gerarLinkParcela(parcela)">
+                Gerar Link
+              </button>
+              <a 
+                *ngIf="parcela.linkPagamento" 
+                [href]="parcela.linkPagamento" 
+                target="_blank" 
+                mat-raised-button 
+                color="accent">
+                Ver Link
+              </a>
+              <span *ngIf="parcela.status === 'PAGO'">✓ Pago</span>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Se carnê não tiver parcelas carregadas ainda -->
+      <p *ngIf="(venda.formaPagamento?.tipo === 'CARNE' || venda.tipoPagamento === 'CARNE') && parcelas.length === 0">
+        Carregando informações das parcelas...
+      </p>
+
+      <!-- Status do pagamento -->
+      <p *ngIf="venda.statusPagamento">
+        Status do pagamento:
+        <span
+          [ngClass]="{
+            'status-aprovado': venda.statusPagamento === 'PAGO',
+            'status-pendente': venda.statusPagamento === 'PENDENTE',
+            'status-rejeitado': venda.statusPagamento === 'REJEITADO',
+            'status-processo': venda.statusPagamento === 'EM_PROCESSO',
+            'status-cancelado': venda.statusPagamento === 'CANCELADO'
+          }"
+        >
+          {{ venda.statusPagamento }}
+        </span>
+      </p>
+
+      <!-- Link de pagamento visível (apenas se existir) -->
+      <p *ngIf="venda.linkPagamento">
+        <strong>Link de Pagamento:</strong>
+        <a [href]="venda.linkPagamento" target="_blank">
+          {{ venda.linkPagamento }}
+        </a>
+      </p>
+
+      <!-- Botão para gerar link de pagamento (débito/crédito/pix sem link) -->
+      <div *ngIf="!venda.linkPagamento && venda.tipoPagamento !== 'DINHEIRO' && venda.formaPagamento?.tipo !== 'CARNE' && (venda.tipoPagamento === 'DEBITO' || venda.tipoPagamento === 'CREDITO' || venda.tipoPagamento === 'PIX')">
+        <button mat-raised-button color="primary" (click)="gerarLinkPagamento()">
+          Gerar Link de Pagamento
+        </button>
+      </div>
+    </div>
+
+    <!-- Tabela de itens -->
+    <table class="produtos" *ngIf="venda.itens.length">
+      <tr>
+        <th>Produto</th>
+        <th>Qtd</th>
+        <th>Preço Unitário</th>
+        <th>Total</th>
+      </tr>
+      <tr *ngFor="let item of venda.itens">
+        <td>{{ item.produtoNome }}</td>
+        <td>{{ item.quantidade }}</td>
+        <td>{{ item.precoUnitario | currency: 'BRL' }}</td>
+        <td>{{ item.subtotal | currency: 'BRL' }}</td>
+      </tr>
+    </table>
+
+    <!-- Total -->
+    <h3 *ngIf="venda.valorTotal">
+      Total: {{ venda.valorTotal | currency:'BRL' }}
+    </h3>
+  </mat-card>
+
+  <!-- Botões -->
+  <div class="acoes" *ngIf="venda">
+    <button mat-raised-button color="primary" (click)="exportarPDF(empresa)">
+      Exportar PDF
+    </button>
+    <button mat-raised-button color="accent" (click)="imprimir(empresa)">
+      Imprimir
+    </button>
+    <button mat-raised-button color="warn" (click)="enviarWhatsApp()">
+      Enviar WhatsApp
+    </button>
+    <button mat-raised-button color="accent" class="full-width" type="button" (click)="voltar()">
+      Voltar
+    </button>
+  </div>
+</div>

@@ -1,0 +1,5 @@
+<div class="recibo-container">
+  <h2>Enviar Recibo</h2>
+  <button (click)="enviarRecibo()">Enviar pelo WhatsApp</button>
+  <p *ngIf="statusMessage">{{ statusMessage }}</p>
+</div>

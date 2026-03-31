@@ -1,0 +1,215 @@
+<div class="relatorios-container">
+  <h2>📊 Relatórios de Vendas</h2>
+
+  <!-- 🔹 Loading Spinner -->
+  <div *ngIf="isLoading" class="loading-overlay">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Carregando relatórios...</p>
+  </div>
+
+  <!-- Filtros -->
+  <mat-card class="card filtros-card">
+    <h3>Filtros de Período</h3>
+    <div class="filtros">
+      <mat-form-field appearance="outline">
+        <mat-label>Data Início</mat-label>
+        <input matInput [matDatepicker]="pickerInicio" [(ngModel)]="dataInicio">
+        <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+        <mat-datepicker #pickerInicio></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Data Fim</mat-label>
+        <input matInput [matDatepicker]="pickerFim" [(ngModel)]="dataFim">
+        <mat-datepicker-toggle matSuffix [for]="pickerFim"></mat-datepicker-toggle>
+        <mat-datepicker #pickerFim></mat-datepicker>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" (click)="atualizarRelatorios()" [disabled]="isLoading">
+        Atualizar Relatórios
+      </button>
+      <button mat-raised-button color="accent" type="button" (click)="voltar()">
+        Voltar
+      </button>
+    </div>
+  </mat-card>
+
+  <!-- Resumo -->
+  <div class="resumo-grid">
+    <mat-card class="card resumo-card">
+      <h3>Total Diário</h3>
+      <p>{{ totalDiario$ | async | currency:'BRL' }}</p>
+    </mat-card>
+
+    <mat-card class="card resumo-card">
+      <h3>Total Mensal</h3>
+      <p *ngIf="dataInicio && dataFim" class="periodo">
+        Período: {{ dataInicio | date:'dd/MM/yyyy' }} - {{ dataFim | date:'dd/MM/yyyy' }}
+      </p>
+      <p>{{ totalMensal$ | async | currency:'BRL' }}</p>
+    </mat-card>
+  </div>
+
+  <div class="export-buttons">
+    <button mat-raised-button color="accent" (click)="exportarExcel()">Exportar Excel</button>
+    <button mat-raised-button color="warn" (click)="exportarPDF()">Exportar PDF</button>
+  </div>
+
+  <!-- Forma de pagamento -->
+  <mat-card class="card">
+    <h3>Vendas por Forma de Pagamento</h3>
+    <canvas id="graficoFormaPagamento"></canvas>
+  </mat-card>
+
+  <!-- Clientes -->
+  <mat-card class="card">
+    <h3>Vendas por Cliente</h3>
+    <canvas id="graficoClientes"></canvas>
+
+    <div class="table-responsive">
+      <table mat-table [dataSource]="(relatoriosClientes$ | async) ?? []" class="mat-elevation-z8 full-width">
+        <ng-container matColumnDef="nomeCliente">
+          <th mat-header-cell *matHeaderCellDef> Cliente </th>
+          <td mat-cell *matCellDef="let element"> {{element.nomeCliente}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="cpf">
+          <th mat-header-cell *matHeaderCellDef> CPF </th>
+          <td mat-cell *matCellDef="let element"> {{element.cpf}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="totalComprado">
+          <th mat-header-cell *matHeaderCellDef> Total Comprado </th>
+          <td mat-cell *matCellDef="let element"> {{element.totalComprado | currency:'BRL'}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="['nomeCliente','cpf','totalComprado']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['nomeCliente','cpf','totalComprado'];"></tr>
+      </table>
+    </div>
+  </mat-card>
+
+  <!-- Valores a Receber -->
+  <mat-card class="card">
+    <h3>Valores a Receber</h3>
+    <div class="table-responsive">
+      <table mat-table [dataSource]="(valoresAReceber$ | async) ?? []" class="mat-elevation-z8 full-width">
+        <ng-container matColumnDef="clienteNome">
+          <th mat-header-cell *matHeaderCellDef> Cliente </th>
+          <td mat-cell *matCellDef="let element"> {{element.clienteNome}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="clienteCpf">
+          <th mat-header-cell *matHeaderCellDef> CPF </th>
+          <td mat-cell *matCellDef="let element"> {{element.clienteCpf}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="valor">
+          <th mat-header-cell *matHeaderCellDef> Valor </th>
+          <td mat-cell *matCellDef="let element"> {{element.valor | currency:'BRL'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="dataVencimento">
+          <th mat-header-cell *matHeaderCellDef> Vencimento </th>
+          <td mat-cell *matCellDef="let element"> {{element.dataVencimento | date:'dd/MM/yyyy'}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="['clienteNome','clienteCpf','valor','dataVencimento']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['clienteNome','clienteCpf','valor','dataVencimento'];"></tr>
+      </table>
+    </div>
+  </mat-card>
+
+  <!-- Inadimplência Geral (UNIFICADO: Vendas + Parcelas) -->
+  <mat-card class="card">
+    <h3>🔴 Inadimplência Geral</h3>
+    <p class="subtitle">Vendas vencidas + Parcelas atrasadas</p>
+    <div class="table-responsive">
+      <table mat-table [dataSource]="(inadimplenciaGeral$ | async) ?? []" class="mat-elevation-z8 full-width">
+        <ng-container matColumnDef="clienteNome">
+          <th mat-header-cell *matHeaderCellDef> Cliente </th>
+          <td mat-cell *matCellDef="let element"> {{element.clienteNome}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="clienteCpf">
+          <th mat-header-cell *matHeaderCellDef> CPF </th>
+          <td mat-cell *matCellDef="let element"> {{element.clienteCpf}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="tipo">
+          <th mat-header-cell *matHeaderCellDef> Tipo </th>
+          <td mat-cell *matCellDef="let element">
+            <span [class.badge-venda]="element.tipo === 'VENDA'" 
+                  [class.badge-parcela]="element.tipo === 'PARCELA'">
+              {{element.tipo}}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="descricao">
+          <th mat-header-cell *matHeaderCellDef> Descrição </th>
+          <td mat-cell *matCellDef="let element"> {{element.descricao}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="valor">
+          <th mat-header-cell *matHeaderCellDef> Valor </th>
+          <td mat-cell *matCellDef="let element"> {{element.valor | currency:'BRL'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="dataVencimento">
+          <th mat-header-cell *matHeaderCellDef> Vencimento </th>
+          <td mat-cell *matCellDef="let element"> {{element.dataVencimento | date:'dd/MM/yyyy'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="diasAtraso">
+          <th mat-header-cell *matHeaderCellDef> Dias Atraso </th>
+          <td mat-cell *matCellDef="let element" class="dias-atraso"> {{element.diasAtraso}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="['clienteNome','clienteCpf','tipo','descricao','valor','dataVencimento','diasAtraso']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['clienteNome','clienteCpf','tipo','descricao','valor','dataVencimento','diasAtraso'];"></tr>
+      </table>
+    </div>
+  </mat-card>
+
+  <!-- 🔹 Detalhamento: Parcelas Atrasadas (opcional) -->
+  <mat-card class="card">
+    <h3>🟠 Detalhamento de Parcelas Atrasadas</h3>
+    <div class="table-responsive">
+      <table mat-table [dataSource]="(parcelasAtrasadas$ | async) ?? []" class="mat-elevation-z8 full-width">
+        <ng-container matColumnDef="clienteNome">
+          <th mat-header-cell *matHeaderCellDef> Cliente </th>
+          <td mat-cell *matCellDef="let element"> {{element.clienteNome}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="clienteCpf">
+          <th mat-header-cell *matHeaderCellDef> CPF </th>
+          <td mat-cell *matCellDef="let element"> {{element.clienteCpf}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="numero">
+          <th mat-header-cell *matHeaderCellDef> Parcela </th>
+          <td mat-cell *matCellDef="let element"> {{element.numero || element.numeroParcela}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="valor">
+          <th mat-header-cell *matHeaderCellDef> Valor </th>
+          <td mat-cell *matCellDef="let element"> {{element.valor | currency:'BRL'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="dataVencimento">
+          <th mat-header-cell *matHeaderCellDef> Vencimento </th>
+          <td mat-cell *matCellDef="let element"> {{element.dataVencimento | date:'dd/MM/yyyy'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="diasAtraso">
+          <th mat-header-cell *matHeaderCellDef> Dias Atraso </th>
+          <td mat-cell *matCellDef="let element" class="dias-atraso"> {{element.diasAtraso}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="['clienteNome','clienteCpf','numero','valor','dataVencimento','diasAtraso']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['clienteNome','clienteCpf','numero','valor','dataVencimento','diasAtraso'];"></tr>
+      </table>
+    </div>
+  </mat-card>
+</div>

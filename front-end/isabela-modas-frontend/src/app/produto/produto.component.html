@@ -1,0 +1,57 @@
+<div class="produto-container">
+  <mat-card>
+    <h2 class="title">
+      {{ modoEdicao ? 'Editar Produto' : 'Cadastro de Produto' }}
+    </h2>
+
+    <form [formGroup]="produtoForm" (ngSubmit)="onSubmit()">
+      <!-- Nome -->
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="nome" />
+      </mat-form-field>
+
+      <!-- Preço -->
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Preço</mat-label>
+        <input matInput type="number" formControlName="preco" />
+      </mat-form-field>
+
+      <!-- Tamanho -->
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Tamanho</mat-label>
+        <input matInput formControlName="tamanho" />
+      </mat-form-field>
+
+      <!-- Cor -->
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Cor</mat-label>
+        <input matInput formControlName="cor" />
+      </mat-form-field>
+
+      <!-- Estoque -->
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Estoque Atual</mat-label>
+        <input matInput type="number" formControlName="estoqueAtual" />
+      </mat-form-field>
+
+      <!-- Categoria -->
+      <mat-form-field appearance="fill">
+  <mat-label>Categoria</mat-label>
+  <mat-select formControlName="categoriaId">
+    <mat-option *ngFor="let c of categorias" [value]="c.id">
+      {{ c.nome }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+      <!-- Botão -->
+      <button mat-raised-button color="primary" class="full-width" type="submit">
+        {{ modoEdicao ? 'Atualizar' : 'Cadastrar' }}
+      </button>
+      <button mat-raised-button color="accent" class="full-width" type="button" (click)="voltar()">
+           Voltar
+      </button>
+    </form>
+  </mat-card>
+</div>

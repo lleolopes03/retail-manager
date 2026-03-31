@@ -1,0 +1,82 @@
+.comprovante-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+
+  mat-card {
+    padding: 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .empresa-info,
+  .cliente-info,
+  .venda-info {
+    margin-bottom: 15px;
+    font-size: 14px;
+    line-height: 1.4;
+
+    p {
+      margin: 2px 0;
+    }
+  }
+
+  .produtos {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f5f5f5;
+      font-weight: bold;
+    }
+
+    td {
+      font-size: 13px;
+    }
+  }
+
+  h3 {
+    text-align: right;
+    margin-top: 15px;
+    font-weight: bold;
+    color: #222;
+  }
+}
+
+.acoes {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+
+  button {
+    min-width: 150px;
+  }
+}
+.status-aprovado {
+  color: green;
+  font-weight: bold;
+}
+
+.status-pendente {
+  color: orange;
+  font-weight: bold;
+}
+
+.status-rejeitado {
+  color: red;
+  font-weight: bold;
+}

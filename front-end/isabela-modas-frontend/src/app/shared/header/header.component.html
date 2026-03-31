@@ -1,0 +1,94 @@
+<mat-toolbar class="app-header" style="background: linear-gradient(135deg, #8B7355 0%, #6B5940 100%) !important; color: white !important; min-height: 64px !important; display: flex !important;">
+  <div class="header-container">
+    <!-- Logo e Título -->
+    <div class="logo-section">
+      <img src="assets/logo.jpg" alt="Isabela Modas" class="header-logo" onerror="this.style.display='none'" />
+      <span class="app-title">Isabela Modas</span>
+    </div>
+
+    <!-- Menu de Navegação -->
+    <nav class="nav-menu">
+      <button mat-button routerLink="/dashboard" routerLinkActive="active">
+        <mat-icon>dashboard</mat-icon>
+        Dashboard
+      </button>
+
+      <button mat-button [matMenuTriggerFor]="cadastrosMenu">
+        <mat-icon>inventory_2</mat-icon>
+        Cadastros
+        <mat-icon class="dropdown-icon">arrow_drop_down</mat-icon>
+      </button>
+      <mat-menu #cadastrosMenu="matMenu" class="custom-menu">
+        <button mat-menu-item routerLink="/produtos">
+          <mat-icon>shopping_bag</mat-icon>
+          Produtos
+        </button>
+        <button mat-menu-item routerLink="/categorias">
+          <mat-icon>category</mat-icon>
+          Categorias
+        </button>
+        <button mat-menu-item routerLink="/clientes">
+          <mat-icon>people</mat-icon>
+          Clientes
+        </button>
+        <button mat-menu-item routerLink="/fornecedores">
+          <mat-icon>local_shipping</mat-icon>
+          Fornecedores
+        </button>
+        <button mat-menu-item routerLink="/funcionarios">
+          <mat-icon>badge</mat-icon>
+          Funcionários
+        </button>
+      </mat-menu>
+
+      <button mat-button [matMenuTriggerFor]="operacoesMenu">
+        <mat-icon>receipt_long</mat-icon>
+        Operações
+        <mat-icon class="dropdown-icon">arrow_drop_down</mat-icon>
+      </button>
+      <mat-menu #operacoesMenu="matMenu" class="custom-menu">
+        <button mat-menu-item routerLink="/vendas">
+          <mat-icon>point_of_sale</mat-icon>
+          Vendas
+        </button>
+        <button mat-menu-item routerLink="/compras">
+          <mat-icon>shopping_cart</mat-icon>
+          Compras
+        </button>
+        <button mat-menu-item routerLink="/movimentacoes-estoque">
+          <mat-icon>swap_horiz</mat-icon>
+          Movimentações
+        </button>
+      </mat-menu>
+
+      <button mat-button routerLink="/relatorios" routerLinkActive="active">
+        <mat-icon>assessment</mat-icon>
+        Relatórios
+      </button>
+    </nav>
+
+    <!-- Ações do Usuário -->
+    <div class="user-section">
+      <button mat-button [matMenuTriggerFor]="userMenu" class="user-button">
+        <mat-icon>account_circle</mat-icon>
+        <span class="user-name">{{ nomeUsuario }}</span>
+        <mat-icon class="dropdown-icon">arrow_drop_down</mat-icon>
+      </button>
+      <mat-menu #userMenu="matMenu" class="custom-menu">
+        <button mat-menu-item routerLink="/empresa-visualizar">
+          <mat-icon>business</mat-icon>
+          Minha Empresa
+        </button>
+        <button mat-menu-item routerLink="/lembretes">
+          <mat-icon>notifications</mat-icon>
+          Lembretes
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          Sair
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+</mat-toolbar>

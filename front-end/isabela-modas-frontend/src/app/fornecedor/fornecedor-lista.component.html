@@ -1,0 +1,128 @@
+<div class="page-container">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <button mat-icon-button routerLink="/dashboard" matTooltip="Voltar ao Dashboard" class="back-button">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div>
+        <h1>Gerenciar Fornecedores</h1>
+        <p>Cadastro completo de fornecedores</p>
+      </div>
+    </div>
+    <button mat-raised-button class="btn-primary" routerLink="/fornecedores/novo">
+      <mat-icon>person_add</mat-icon>
+      Novo Cliente
+    </button>
+  </div>
+
+  <!-- Barra de Filtros -->
+  <div class="content-card filters-section">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Buscar cliente</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput [(ngModel)]="termo" (keyup)="buscar()" placeholder="Nome, CPF, telefone..." />
+      <button mat-icon-button matSuffix *ngIf="termo" (click)="limparBusca()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+
+  <!-- Tabela -->
+  <div class="content-card table-container">
+    <table mat-table [dataSource]="dataSource" class="elegant-table">
+      
+      <!-- Ícone -->
+      <ng-container matColumnDef="icone">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let c">
+          <div class="client-icon">
+            <mat-icon>person</mat-icon>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Nome -->
+      <ng-container matColumnDef="nome">
+        <th mat-header-cell *matHeaderCellDef>Cliente</th>
+        <td mat-cell *matCellDef="let c">
+          <div class="client-info">
+            <strong>{{ c.nome }}</strong>
+            <span class="client-detail">ID: {{ c.id }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- CPF -->
+      <ng-container matColumnDef="cpf">
+        <th mat-header-cell *matHeaderCellDef>CPF</th>
+        <td mat-cell *matCellDef="let c">{{ c.cpf }}</td>
+      </ng-container>
+
+      <!-- Telefone -->
+      <ng-container matColumnDef="telefone">
+        <th mat-header-cell *matHeaderCellDef>Telefone</th>
+        <td mat-cell *matCellDef="let c">
+          <div class="contact-info">
+            <mat-icon>phone</mat-icon>
+            <span>{{ c.telefone || 'Não informado' }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Email -->
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>Email</th>
+        <td mat-cell *matCellDef="let c">
+          <div class="contact-info">
+            <mat-icon>email</mat-icon>
+            <span>{{ c.email || 'Não informado' }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Ações -->
+      <ng-container matColumnDef="acoes">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td mat-cell *matCellDef="let f">
+          <div class="action-buttons">
+            <button mat-icon-button [routerLink]="['/fornecedores', f.id, 'editar']" matTooltip="Editar">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deletar(f.id)" matTooltip="Excluir">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row"></tr>
+    </table>
+
+    <!-- Estado Vazio -->
+    <div class="empty-state" *ngIf="dataSource.data.length === 0">
+      <mat-icon>local_shipping</mat-icon>
+      <h3>Nenhum fornecedor encontrado</h3>
+      <p>{{ termo ? 'Tente ajustar a busca' : 'Comece cadastrando seu primeiro fornecedor' }}</p>
+      <button mat-raised-button class="btn-primary" routerLink="/fornecedores/novo">
+        <mat-icon>add</mat-icon>
+        Cadastrar Fornecedor
+      </button>
+    </div>
+  </div>
+
+  <!-- Paginação -->
+  <div class="pagination-container" *ngIf="totalPages > 0 && dataSource.data.length > 0">
+    <button mat-icon-button (click)="paginaAnterior()" [disabled]="page === 0">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <div class="pagination-info">
+      <span>Página <strong>{{ page + 1 }}</strong> de <strong>{{ totalPages }}</strong></span>
+    </div>
+    <button mat-icon-button (click)="proximaPagina()" [disabled]="page >= totalPages - 1">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+</div>
+

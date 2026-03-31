@@ -1,0 +1,111 @@
+// ========================================
+// ISABELA MODAS - Tema Customizado Material
+// ========================================
+
+@use '@angular/material' as mat;
+
+// Garantir que o header seja exibido
+app-header {
+  display: block !important;
+  width: 100% !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 1000 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: auto !important;
+  min-height: 64px !important;
+}
+
+// Garantir que o router-outlet ocupe o resto da tela
+router-outlet {
+  display: block;
+}
+
+// Definir paleta customizada baseada no logo
+$isabela-primary-palette: (
+  50: #F5E6D3,
+  100: #E0D1BF,
+  200: #D4A574,
+  300: #C19A68,
+  400: #A68A6F,
+  500: #8B7355,  // Cor principal
+  600: #6B5940,
+  700: #5A4A35,
+  800: #4A3C2C,
+  900: #3A2E23,
+  A100: #FFF8F0,
+  A200: #F5E6D3,
+  A400: #D4A574,
+  A700: #8B7355,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: white,
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: rgba(black, 0.87),
+    A200: rgba(black, 0.87),
+    A400: white,
+    A700: white,
+  )
+);
+
+$isabela-accent-palette: (
+  50: #FFF8F0,
+  100: #FFE8D4,
+  200: #FFD4A5,
+  300: #FFC077,
+  400: #FFB04D,
+  500: #D4A574,  // Dourado suave
+  600: #C19A68,
+  700: #A68A6F,
+  800: #8B7355,
+  900: #6B5940,
+  A100: #FFE8D4,
+  A200: #FFD4A5,
+  A400: #D4A574,
+  A700: #A68A6F,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: rgba(black, 0.87),
+    400: rgba(black, 0.87),
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: rgba(black, 0.87),
+    A200: rgba(black, 0.87),
+    A400: white,
+    A700: white,
+  )
+);
+
+@include mat.core();
+
+// Definir tema usando paletas prontas do Material
+$my-theme: mat.m2-define-light-theme((
+  color: (
+    primary: mat.$m2-brown-palette,
+    accent: mat.$m2-amber-palette,
+  )
+));
+
+@include mat.all-component-themes($my-theme);
+
+// Sobrescrever cores globais para remover qualquer tema padrão
+:root {
+  --mdc-theme-primary: #8B7355;
+  --mdc-theme-secondary: #F5E6D3;
+  --mdc-theme-surface: #FFFFFF;
+  --mdc-theme-background: #FAFAFA;
+  --mdc-theme-error: #E57373;
+}

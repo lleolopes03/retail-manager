@@ -1,0 +1,29 @@
+<div class="categoria-container">
+  <mat-card>
+    <h2 class="title">
+      {{ modoEdicao ? 'Editar Categoria' : 'Cadastro de Categoria' }}
+    </h2>
+
+    <form [formGroup]="categoriaForm" (ngSubmit)="onSubmit()">
+      <!-- Nome -->
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="nome" />
+      </mat-form-field>
+
+      <!-- Descrição -->
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Descrição</mat-label>
+        <textarea matInput rows="3" formControlName="descricao"></textarea>
+      </mat-form-field>
+
+      <!-- Botão -->
+      <button mat-raised-button color="primary" class="full-width" type="submit">
+        {{ modoEdicao ? 'Atualizar' : 'Cadastrar' }}
+      </button>
+      <button mat-raised-button color="accent" class="full-width" type="button" (click)="voltar()">
+           Voltar
+      </button>
+    </form>
+  </mat-card>
+</div>

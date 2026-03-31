@@ -1,0 +1,171 @@
+<div class="page-container">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <button mat-icon-button routerLink="/movimentacoes-estoque" matTooltip="Voltar" class="back-button">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div>
+        <h1>Nova Movimentação de Estoque</h1>
+        <p>Registre saída temporária de produtos para clientes</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-card">
+    <form [formGroup]="movimentacaoForm" (ngSubmit)="onSubmit()">
+      
+      <!-- Cliente com Autocomplete -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Cliente</mat-label>
+        <mat-icon matPrefix>person</mat-icon>
+        <input 
+          matInput 
+          [formControl]="clienteControl"
+          [matAutocomplete]="autoCliente"
+          placeholder="Digite o nome ou CPF do cliente..." />
+        <mat-autocomplete 
+          #autoCliente="matAutocomplete" 
+          [displayWith]="exibirCliente"
+          (optionSelected)="selecionarCliente($event.option.value)">
+          <mat-option *ngFor="let cliente of clientesFiltrados | async" [value]="cliente">
+            <div class="autocomplete-option">
+              <strong>{{ cliente.nome }}</strong>
+              <span class="text-muted">CPF: {{ cliente.cpf }}</span>
+            </div>
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <!-- Tipo de Movimentação -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Tipo de Movimentação</mat-label>
+        <mat-icon matPrefix>swap_horiz</mat-icon>
+        <mat-select formControlName="tipoMovimentacao">
+          <mat-option value="SAIDA_TEMPORARIA">
+            <mat-icon>schedule</mat-icon>
+            Saída Temporária (Cliente vai experimentar)
+          </mat-option>
+          <mat-option value="DEVOLUCAO">
+            <mat-icon>keyboard_return</mat-icon>
+            Devolução (Volta ao estoque)
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Observação -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Observação</mat-label>
+        <mat-icon matPrefix>notes</mat-icon>
+        <textarea matInput formControlName="observacao" rows="2" placeholder="Ex: Cliente levou para experimentar em casa"></textarea>
+      </mat-form-field>
+
+      <!-- Seção de Produtos -->
+      <div class="produtos-section">
+        <h3>
+          <mat-icon>inventory_2</mat-icon>
+          Produtos
+        </h3>
+
+        <!-- Adicionar Produto -->
+        <div class="add-produto-row">
+          <mat-form-field appearance="outline" class="produto-autocomplete">
+            <mat-label>Buscar Produto</mat-label>
+            <mat-icon matPrefix>search</mat-icon>
+            <input 
+              matInput 
+              [formControl]="produtoControl"
+              [matAutocomplete]="autoProduto"
+              placeholder="Digite o nome do produto..." />
+            <mat-autocomplete 
+              #autoProduto="matAutocomplete" 
+              [displayWith]="exibirProduto"
+              (optionSelected)="adicionarProduto($event.option.value)">
+              <mat-option *ngFor="let produto of produtosFiltrados | async" [value]="produto">
+                <div class="autocomplete-option">
+                  <strong>{{ produto.nome }}</strong>
+                  <span class="text-muted" *ngIf="produto.cor || produto.tamanho">
+                    {{ produto.cor }} - {{ produto.tamanho }}
+                  </span>
+                  <span class="estoque-badge" [class.estoque-baixo]="produto.estoqueAtual <= 5">
+                    Estoque: {{ produto.estoqueAtual || 0 }}
+                  </span>
+                </div>
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="quantidade-input">
+            <mat-label>Qtd</mat-label>
+            <input matInput type="number" [formControl]="quantidadeControl" min="1" />
+          </mat-form-field>
+
+          <button 
+            mat-raised-button 
+            color="primary" 
+            type="button" 
+            (click)="adicionarProdutoManual()"
+            [disabled]="!produtoSelecionado || !quantidadeControl.value">
+            <mat-icon>add</mat-icon>
+            Adicionar
+          </button>
+        </div>
+
+        <!-- Lista de Produtos Adicionados -->
+        <div class="produtos-lista" *ngIf="produtosAdicionados.length > 0">
+          <div class="produto-item" *ngFor="let item of produtosAdicionados; let i = index">
+            <div class="produto-info">
+              <mat-icon class="produto-icon">inventory_2</mat-icon>
+              <div class="produto-details">
+                <strong>{{ item.produtoNome }}</strong>
+                <span class="text-muted">Quantidade: {{ item.quantidade }} unidade(s)</span>
+              </div>
+            </div>
+            <button 
+              mat-icon-button 
+              color="warn" 
+              (click)="removerProduto(i)"
+              matTooltip="Remover">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <!-- Estado Vazio -->
+        <div class="empty-produtos" *ngIf="produtosAdicionados.length === 0">
+          <mat-icon>inventory</mat-icon>
+          <p>Nenhum produto adicionado</p>
+          <span>Use o campo acima para buscar e adicionar produtos</span>
+        </div>
+      </div>
+
+      <!-- Resumo -->
+      <div class="resumo-card" *ngIf="produtosAdicionados.length > 0">
+        <h4>Resumo</h4>
+        <div class="resumo-item">
+          <span>Total de produtos:</span>
+          <strong>{{ produtosAdicionados.length }}</strong>
+        </div>
+        <div class="resumo-item">
+          <span>Total de unidades:</span>
+          <strong>{{ getTotalUnidades() }}</strong>
+        </div>
+      </div>
+
+      <!-- Botões de Ação -->
+      <div class="action-buttons">
+        <button 
+          mat-raised-button 
+          color="primary" 
+          type="submit"
+          [disabled]="!movimentacaoForm.valid || produtosAdicionados.length === 0">
+          <mat-icon>save</mat-icon>
+          Registrar Movimentação
+        </button>
+        <button mat-button type="button" routerLink="/movimentacoes-estoque">
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

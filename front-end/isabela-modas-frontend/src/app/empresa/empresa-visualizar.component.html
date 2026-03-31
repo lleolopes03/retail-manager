@@ -1,0 +1,37 @@
+<div class="empresa-container" *ngIf="empresa$ | async as empresa">
+  <mat-card>
+    <h2 class="title">Dados da Empresa</h2>
+
+    <mat-list>
+      <mat-list-item><strong>Nome:</strong> {{ empresa.nome }}</mat-list-item>
+      <mat-list-item><strong>CNPJ:</strong> {{ empresa.cnpj }}</mat-list-item>
+      <mat-list-item><strong>Email:</strong> {{ empresa.email }}</mat-list-item>
+      <mat-list-item><strong>Telefone:</strong> {{ empresa.telefone }}</mat-list-item>
+    </mat-list>
+
+    <h3>Endereço</h3>
+    <mat-list *ngIf="empresa.endereco">
+      <mat-list-item><strong>CEP:</strong> {{ empresa.endereco.cep }}</mat-list-item>
+      <mat-list-item><strong>Logradouro:</strong> {{ empresa.endereco.logradouro }}</mat-list-item>
+      <mat-list-item><strong>Bairro:</strong> {{ empresa.endereco.bairro }}</mat-list-item>
+      <mat-list-item><strong>Cidade:</strong> {{ empresa.endereco.localidade }}</mat-list-item>
+      <mat-list-item><strong>Estado:</strong> {{ empresa.endereco.uf }}</mat-list-item>
+    </mat-list>
+
+    <mat-list>
+      <mat-list-item><strong>Número:</strong> {{ empresa.numero }}</mat-list-item>
+    </mat-list>
+
+    <!-- Botões de ação -->
+    <div class="actions">
+      <button mat-raised-button color="primary" routerLink="/empresas/editar" class="btn-edit">
+        <mat-icon>edit</mat-icon>
+        Editar Empresa
+      </button>
+      <button mat-raised-button color="accent" (click)="voltar()">
+        <mat-icon>arrow_back</mat-icon>
+        Voltar
+      </button>
+    </div>
+  </mat-card>
+</div>

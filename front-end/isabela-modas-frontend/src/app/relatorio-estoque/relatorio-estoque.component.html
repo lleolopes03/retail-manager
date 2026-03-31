@@ -1,0 +1,38 @@
+<div class="estoque-container">
+  <mat-card>
+    <h2>Estoque Atual</h2>
+    <div>
+      <button mat-raised-button color="accent" routerLink="/dashboard">
+      Voltar ao Dashboard
+    </button>
+    </div>
+
+
+    <table mat-table [dataSource]="estoqueAtual" class="mat-elevation-z8 full-width">
+
+      <!-- Produto -->
+      <ng-container matColumnDef="nome">
+        <th mat-header-cell *matHeaderCellDef> Produto </th>
+        <td mat-cell *matCellDef="let element"> {{element.nome}} </td>
+      </ng-container>
+
+      <!-- Tamanho -->
+      <ng-container matColumnDef="tamanho">
+        <th mat-header-cell *matHeaderCellDef> Tamanho </th>
+        <td mat-cell *matCellDef="let element"> {{element.tamanho}} </td>
+      </ng-container>
+
+      <!-- Quantidade -->
+      <ng-container matColumnDef="quantidadeAtual">
+        <th mat-header-cell *matHeaderCellDef> Quantidade </th>
+        <td mat-cell *matCellDef="let element" [ngClass]="{'estoque-baixo': element.quantidadeAtual < 5}">
+          {{element.quantidadeAtual}}
+        </td>
+      </ng-container>
+
+      <!-- Cabeçalho e linhas -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </mat-card>
+</div>

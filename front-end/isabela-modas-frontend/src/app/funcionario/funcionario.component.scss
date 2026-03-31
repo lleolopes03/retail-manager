@@ -1,0 +1,44 @@
+.funcionario-container {
+  padding: 20px;
+  background: #f5f5f5;
+  min-height: 100vh;
+
+  .title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #3f51b5;
+  }
+
+  mat-card {
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    background: #fff;
+  }
+
+  .full-width {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  button {
+    margin-top: 10px;
+  }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .funcionario-container {
+    padding: 10px;
+
+    .title {
+      font-size: 1.3rem;
+    }
+
+    mat-card {
+      padding: 15px;
+    }
+  }
+}

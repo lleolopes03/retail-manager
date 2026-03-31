@@ -1,0 +1,10 @@
+<div class="pix-container">
+  <h3>Pagamento via PIX</h3>
+  <button (click)="gerarPix(123, 100)">Gerar link PIX</button>
+
+  <div *ngIf="linkPagamento">
+    <p>Copie o link abaixo:</p>
+    <input type="text" [value]="linkPagamento" readonly>
+    <button (click)="copiar(linkPagamento)">Copiar</button>
+  </div>
+</div>

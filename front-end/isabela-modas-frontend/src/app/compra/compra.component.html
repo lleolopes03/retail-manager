@@ -1,0 +1,78 @@
+<div class="compra-container">
+  <mat-card>
+    <h2 class="title">Cadastro de Compra</h2>
+    <form [formGroup]="compraForm" (ngSubmit)="onSubmit()">
+
+      <!-- Data da Compra -->
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Data da Compra</mat-label>
+        <input matInput type="date" formControlName="dataCompra" />
+      </mat-form-field>
+
+      <!-- Fornecedor -->
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Fornecedor</mat-label>
+        <mat-select formControlName="fornecedorId">
+          <mat-option *ngFor="let f of fornecedores" [value]="f.id">{{ f.nome }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <h3>Itens da Compra</h3>
+      <div formArrayName="itens">
+        <div *ngFor="let item of itens.controls; let i = index" [formGroupName]="i" class="itens-container">
+          <div class="item-row">
+            <!-- Produto -->
+            <mat-form-field appearance="outline">
+              <mat-label>Produto</mat-label>
+              <mat-select formControlName="produtoId">
+                <mat-option *ngFor="let p of produtos" [value]="p.id">{{ p.nome }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <!-- Quantidade -->
+            <mat-form-field appearance="outline">
+              <mat-label>Quantidade</mat-label>
+              <input matInput type="number" formControlName="quantidade" (input)="calcularSubtotal(i)" />
+            </mat-form-field>
+
+            <!-- Preço Unitário -->
+            <mat-form-field appearance="outline">
+              <mat-label>Preço Unitário</mat-label>
+              <input matInput type="number" formControlName="precoUnitario" (input)="calcularSubtotal(i)" />
+            </mat-form-field>
+
+            <!-- Subtotal -->
+            <mat-form-field appearance="outline">
+              <mat-label>Subtotal</mat-label>
+              <input matInput formControlName="subtotal" readonly />
+            </mat-form-field>
+
+            <!-- Botão Excluir -->
+            <button mat-icon-button color="warn" type="button" (click)="removerItem(i)" matTooltip="Remover item" *ngIf="itens.length > 1">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botão adicionar item -->
+      <button mat-raised-button color="accent" type="button" class="adicionar-item" (click)="adicionarItem()">
+        Adicionar Item
+      </button>
+
+      <!-- Valor Total -->
+      <mat-form-field class="full-width valor-total" appearance="outline">
+        <mat-label>Valor Total</mat-label>
+        <input matInput formControlName="valorTotal" readonly />
+      </mat-form-field>
+
+      <!-- Botão submit -->
+      <button mat-raised-button color="primary" class="full-width" type="submit">
+        Cadastrar Compra
+      </button>
+      <button mat-raised-button color="accent" class="full-width" type="button" (click)="voltar()">
+           Voltar
+      </button>
+    </form>
+  </mat-card>
+</div>

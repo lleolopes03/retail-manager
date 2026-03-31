@@ -1,0 +1,63 @@
+.empresa-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 24px;
+  background-color: #f5f7fa;
+
+  mat-card {
+    width: 600px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    background-color: #fff;
+  }
+
+  h2, h3 {
+    margin-bottom: 16px;
+    color: #2c3e50;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  mat-list {
+    margin-bottom: 16px;
+  }
+
+  mat-list-item {
+    margin-bottom: 8px;
+    font-size: 15px;
+    color: #34495e;
+
+    strong {
+      color: #2c3e50;
+      margin-right: 6px;
+    }
+  }
+
+  .actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 24px;
+
+    button {
+      font-weight: 600;
+      min-width: 150px;
+      
+      mat-icon {
+        margin-right: 6px;
+      }
+    }
+    
+    .btn-edit {
+      background-color: #3f51b5;
+      color: white;
+      
+      &:hover {
+        background-color: #303f9f;
+      }
+    }
+  }
+}

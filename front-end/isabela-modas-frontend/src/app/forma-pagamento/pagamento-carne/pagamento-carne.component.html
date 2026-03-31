@@ -1,0 +1,36 @@
+<div class="carne-container">
+  <h3>Pagamento via Carnê</h3>
+
+  <label>Número de Parcelas</label>
+  <input type="number" [(ngModel)]="numeroParcelas">
+
+  <label>Primeira Parcela</label>
+  <input type="date" [(ngModel)]="primeiraParcela">
+
+  <label>Intervalo (dias)</label>
+  <input type="number" [(ngModel)]="intervaloDias">
+
+  <!-- Exemplo: vendaId e valorTotal devem vir da venda selecionada -->
+  <button (click)="gerarCarne(123, 600)">Gerar Carnê</button>
+</div>
+
+<div>
+  <h4>Parcelas da Venda</h4>
+  <ul>
+    <li *ngFor="let p of parcelas">
+      Parcela {{p.numero}} - R$ {{p.valor}} - Vencimento: {{p.dataVencimento}} - Status: {{p.status}}
+      <button (click)="pagarParcela(p.id)">Pagar</button>
+      <button (click)="cobrarParcela(p.id, '5599999999999')">Cobrar via WhatsApp</button>
+    </li>
+  </ul>
+</div>
+
+<div>
+  <h4>Parcelas Atrasadas</h4>
+  <ul>
+    <li *ngFor="let p of parcelasAtrasadas">
+      Cliente: {{p.nomeCliente}} - CPF: {{p.cpfCliente}} - Parcela {{p.numeroParcela}} - R$ {{p.valor}}
+      - Vencimento: {{p.dataVencimento}} - Atraso: {{p.diasAtraso}} dias
+    </li>
+  </ul>
+</div>

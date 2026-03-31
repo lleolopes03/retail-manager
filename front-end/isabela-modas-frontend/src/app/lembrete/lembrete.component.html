@@ -1,0 +1,39 @@
+<div class="lembretes-container">
+  <h2>📌 Lembretes</h2>
+
+  <!-- Formulário para lembrete manual -->
+  <mat-card class="card form-card">
+    <h3>Novo Lembrete</h3>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Título</mat-label>
+      <input matInput [(ngModel)]="novoTitulo">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Descrição</mat-label>
+      <input matInput [(ngModel)]="novaDescricao">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Data</mat-label>
+      <input matInput [matDatepicker]="picker" [(ngModel)]="novaData">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" (click)="adicionarManual()">Adicionar</button>
+  </mat-card>
+
+  <!-- Lista de lembretes -->
+  <div class="lista-lembretes">
+    <mat-card class="card lembrete-card" [ngClass]="{ concluido: l.concluido }" *ngFor="let l of lembretes">
+      <div class="lembrete-header">
+        <h3>{{ l.titulo }}</h3>
+        <span class="status" *ngIf="l.concluido">✔ Concluído</span>
+      </div>
+      <p>{{ l.descricao }}</p>
+      <p><strong>Data:</strong> {{ l.dataHora | date:'dd/MM/yyyy' }}</p>
+      <button mat-button color="primary" (click)="concluir(l)" *ngIf="!l.concluido">Concluir</button>
+    </mat-card>
+  </div>
+</div>

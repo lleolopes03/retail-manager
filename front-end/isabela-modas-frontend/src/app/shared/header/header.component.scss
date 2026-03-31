@@ -1,0 +1,132 @@
+.app-header {
+  background: linear-gradient(135deg, #8B7355 0%, #6B5940 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  padding: 0 24px;
+  height: 64px;
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
+  height: 100%;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.app-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: white;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  justify-content: center;
+
+  button {
+    color: white;
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 0 16px;
+    height: 48px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+
+    mat-icon {
+      margin-right: 6px;
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    .dropdown-icon {
+      margin-left: 4px;
+      margin-right: -8px;
+    }
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.15);
+    }
+
+    &.active {
+      background-color: rgba(255, 255, 255, 0.2);
+      font-weight: 600;
+    }
+  }
+}
+
+.user-section {
+  display: flex;
+  align-items: center;
+}
+
+.user-button {
+  color: white;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+
+  mat-icon {
+    margin-right: 6px;
+  }
+
+  .user-name {
+    margin: 0 4px;
+    font-size: 0.95rem;
+  }
+
+  .dropdown-icon {
+    margin-left: 4px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .nav-menu button {
+    font-size: 0.85rem;
+    padding: 0 12px;
+  }
+
+  .app-title {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .user-name {
+    display: none;
+  }
+
+  .app-title {
+    display: none;
+  }
+}
