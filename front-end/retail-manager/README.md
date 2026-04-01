@@ -44,7 +44,7 @@ Interface web para gestão de varejo, desenvolvida com Angular 21 e Angular Mate
 ### 1. Instale as dependências
 
 ```bash
-cd front-end/isabela-modas-frontend
+cd front-end/retail-manager
 npm install
 ```
 
