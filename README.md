@@ -147,7 +147,7 @@ WHATSAPP_TOKEN=seu_token_whatsapp
 ```
 retail-manager/
 ├── back-end/
-│   ├── src/main/java/com/br/isabelaModas/
+│   ├── src/main/java/com/br/retail-manager/
 │   │   ├── config/          # CORS, JWT, Security, PasswordEncoder
 │   │   ├── controller/      # Controllers REST
 │   │   ├── dtos/            # DTOs de request e response
@@ -203,4 +203,4 @@ retail-manager/
 
 ## Autor
 
-Desenvolvido por [Leonardo Lopes](https://github.com/lleolopes03).
+Desenvolvido por [Leandro Lopes](https://github.com/lleolopes03).
