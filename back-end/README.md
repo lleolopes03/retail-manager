@@ -142,7 +142,7 @@ A API estará disponível em: `http://localhost:8080`
 
 ```
 back-end/
-├── src/main/java/com/br/isabelaModas/
+├── src/main/java/com/br/retail-manager/
 │   ├── config/          # Configurações: CORS, JWT, Security, PasswordEncoder
 │   ├── controller/      # Controllers REST
 │   ├── dtos/            # DTOs de request e response
